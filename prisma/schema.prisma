@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Artist {
+  id          String    @id @default(cuid())
+  name        String
+  bio         String
+  birthYear   Int
+  deathYear   Int?
+  nationality String
+  imageUrl    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  artworks    Artwork[]
+}
+
+model ArtMovement {
+  id          String    @id @default(cuid())
+  name        String
+  description String
+  period      String
+  imageUrl    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  artworks    Artwork[]
+}
+
+model Artwork {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  year        Int
+  medium      String
+  dimensions  String
+  imageUrl    String
+  featured    Boolean   @default(false)
+  artistId    String
+  movementId  String
+  artist      Artist    @relation(fields: [artistId], references: [id])
+  movement    ArtMovement @relation(fields: [movementId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
